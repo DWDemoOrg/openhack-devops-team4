@@ -18,8 +18,6 @@
 name: ci
 on:
   pull_request:
-    paths: 
-      - '/apis/userprofile/**'
     branches: [ main ]      
 
 env:
@@ -40,24 +38,21 @@ jobs:
         node-version: ${{ env.NODE_VERSION }}
     - name: npm install, build, and test
       run: |
-        working-directory: '/apis/userprofile/'
+        cd ./apis/userprofile
         # Build and test the project, then
         # deploy to Azure Web App.
         npm install
         npm run build --if-present
         npm run test --if-present
         
-    - name: Build a Docker image and Push it to ACR
-      uses: azure/docker-login@v1
-      with:
-          login-server: openhackheh1m9c5acr.azurecr.io
-          username: ${{ secrets.ACR_USERNAME }}
-          password: ${{ secrets.ACR_PASSWORD }}
-          
     - name: Build and push
       uses: docker/build-push-action@v2
       with:
-          context: .
+          context: ./apis/userprofile
           push: true
-          tags: devopsoh/api-userprofile:latest
- 
+          image: devopsoh/api-userprofile
+          tags: latest
+          login-server: openhackheh1m9c5acr.azurecr.io
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
+	
