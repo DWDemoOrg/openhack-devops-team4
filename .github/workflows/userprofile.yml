@@ -17,9 +17,10 @@
 # For more samples to get started with GitHub Action workflows to deploy to Azure, refer to https://github.com/Azure/actions-workflow-samples
 name: ci
 on:
-  push:
-    branches:
-      - 'main'
+  pull_request:
+    paths: 
+      - '/apis/userprofile/**'
+    branches: [ main ]      
 
 env:
   AZURE_WEBAPP_NAME: openhackheh1m9c5userprofile    # set this to your application's name
@@ -39,6 +40,7 @@ jobs:
         node-version: ${{ env.NODE_VERSION }}
     - name: npm install, build, and test
       run: |
+        working-directory: '/apis/userprofile/'
         # Build and test the project, then
         # deploy to Azure Web App.
         npm install
@@ -58,7 +60,4 @@ jobs:
           context: .
           push: true
           tags: devopsoh/api-userprofile:latest
-   
-
-
  
