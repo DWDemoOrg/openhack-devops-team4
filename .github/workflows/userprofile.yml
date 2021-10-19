@@ -55,4 +55,3 @@ jobs:
           login-server: openhackheh1m9c5acr.azurecr.io
           username: ${{ secrets.ACR_USERNAME }}
           password: ${{ secrets.ACR_PASSWORD }}
-	
