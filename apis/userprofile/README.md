@@ -40,3 +40,4 @@ There will be a junit formatted report file called userprofile-report.xml under 
 *Hello World! Kick off action!! #3*
 *Hello World! Kick off action!! #4*
 *Hello World! Kick off action!! #5*
+*Hello World! Kick off action!! #6*
