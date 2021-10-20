@@ -32,7 +32,7 @@ jobs:
   build-and-deploy:
     name: Build and Deploy
     runs-on: ubuntu-latest
-    environment: production
+    environment: staging
     steps:
     - uses: actions/checkout@v2
     - name: Use Node.js ${{ env.NODE_VERSION }}
@@ -62,6 +62,27 @@ jobs:
       run: |
         cd ./apis/userprofile
         docker build . -t devopsoh/api-userprofile:latest
-        docker tag devopsoh/api-userprofile ${{ secrets.REGISTRY_LOGIN_SERVER }}/devopsoh/api-userprofile:latest
-        docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/devopsoh/api-userprofile:latest
- 
+        docker tag devopsoh/api-userprofile ${{ secrets.REGISTRY_LOGIN_SERVER }}/devopsoh/api-userprofile:${{ github.run_number }}
+        docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/devopsoh/api-userprofile:${{ github.run_number }}
+
+  release-staging:
+    name: Release Staging
+    needs: build-and-deploy
+    runs-on: ubuntu-latest
+    environment: staging
+    steps:
+    - name: Relese Staging
+      run: |
+        echo Release to Staging
+
+  release-production:
+    name: Release Production
+    needs: release-staging
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+    - name: Relese Prod
+      run: |
+        echo Release to Prod        
+#  ${{ github.run_id }}
+#  ${{ github.run_number }}
