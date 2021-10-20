@@ -21,7 +21,7 @@ on:
     branches: [ main ]
     paths:
       - 'apis/userprofile/**'
-
+  workflow_dispatch:
 env:
   AZURE_WEBAPP_NAME: openhackheh1m9c5userprofile    # set this to your application's name
   AZURE_WEBAPP_PACKAGE_PATH: '/apis/userprofile'      # set this to the path to your web app project, defaults to the repository root
