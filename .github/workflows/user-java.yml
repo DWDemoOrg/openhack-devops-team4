@@ -1,0 +1,88 @@
+# This workflow will build and push a node.js application to an Azure Web App when there is a push to the main branch.
+#
+# This workflow assumes you have already created the target Azure App Service web app.
+# For instructions see https://docs.microsoft.com/azure/app-service/app-service-plan-manage#create-an-app-service-plan
+#
+# To configure this workflow: 
+#
+# 1. For Linux apps, add an app setting called WEBSITE_WEBDEPLOY_USE_SCM and set it to true in your app **before downloading the file**.
+#      For more instructions see: https://docs.microsoft.com/azure/app-service/configure-common#configure-app-settings
+#
+# 2. Set up a secret in your repository named AZURE_WEBAPP_PUBLISH_PROFILE with the value of your Azure publish profile.
+#    For instructions on obtaining the publish profile see: https://docs.microsoft.com/azure/app-service/deploy-github-actions#configure-the-github-secret
+#
+# 3. Change the values for the AZURE_WEBAPP_NAME, AZURE_WEBAPP_PACKAGE_PATH and NODE_VERSION environment variables  (below).
+#
+# For more information on GitHub Actions for Azure, refer to https://github.com/Azure/Actions
+# For more samples to get started with GitHub Action workflows to deploy to Azure, refer to https://github.com/Azure/actions-workflow-samples
+name: ci
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'apis/user-java/**'
+  workflow_dispatch:
+env:
+  AZURE_WEBAPP_NAME: openhackheh1m9c5userjava    # set this to your application's name
+  AZURE_WEBAPP_PACKAGE_PATH: '/apis/user-java'      # set this to the path to your web app project, defaults to the repository root
+  NODE_VERSION: '12.x'                # set this to the node version to use
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}       # The GitHub token (if not provided the environment variable GITHUB_TOKEN will be used instead)
+
+jobs:
+  build-and-deploy:
+    name: Build and Deploy
+    runs-on: ubuntu-latest
+    environment: staging
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ env.NODE_VERSION }}
+      uses: actions/setup-node@v2
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+    - name: npm install, build, and test
+      run: |
+        cd ./apis/user-java
+        # Build and test the project, then
+        # deploy to Azure Web App.
+        npm install
+        npm run build
+        npm run test --if-present
+    - name: Create an issue
+      uses: JasonEtco/create-an-issue@v2.6.0
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}       # The GitHub token (if not provided the environment variable GITHUB_TOKEN will be used instead)
+      if: ${{ failure() }}
+    - name: Docker login
+      uses: azure/docker-login@v1
+      with:
+          login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
+    - name: Build and push
+      run: |
+        cd ./apis/user-java
+        docker build . -t devopsoh/api-userprofile:latest
+        docker tag devopsoh/api-userprofile ${{ secrets.REGISTRY_LOGIN_SERVER }}/devopsoh/api-userprofile:${{ github.run_number }}
+        docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/devopsoh/api-userprofile:${{ github.run_number }}
+
+  release-staging:
+    name: Release Staging
+    needs: build-and-deploy
+    runs-on: ubuntu-latest
+    environment: staging
+    steps:
+    - name: Relese Staging
+      run: |
+        echo Release to Staging
+
+  release-production:
+    name: Release Production
+    needs: release-staging
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+    - name: Relese Prod
+      run: |
+        echo Release to Prod        
+#  ${{ github.run_id }}
+#  ${{ github.run_number }}
