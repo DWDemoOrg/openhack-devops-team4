@@ -18,9 +18,10 @@
 name: ci-poi
 on:
   push:
-    branches: [ main, poi-build-fix ]
-    paths:
-      - 'apis/poi/**'
+    #branches: [ main, poi-build-fix ]
+    branches: [ poi-build-fix ]
+    # paths:
+    #   - 'apis/poi/**'
   workflow_dispatch:
 env:
   AZURE_WEBAPP_NAME: openhackheh1m9c5poi    # set this to your application's name
