@@ -1,0 +1,5 @@
+SQL_SERVER="<-- your database server uri -- >"
+SQL_PASSWORD="<-- your login password -- >"
+SQL_USER="<-- your login user -- >"
+SQL_DBNAME="<-- your database name -- >"
+SQL_DRIVER="mssql"  
