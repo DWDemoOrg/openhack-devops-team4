@@ -47,17 +47,11 @@ jobs:
     - name: Docker login
       uses: azure/docker-login@v1
       with:
-          login-server: yourACRname.azurecr.io
+          login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
           username: ${{ secrets.ACR_USERNAME }}
           password: ${{ secrets.ACR_PASSWORD }}
     - name: Build and push
-      uses: docker/build-push-action@v2
-      with:
-          context: ./apis/userprofile
-          push: true
-          image: openhackheh1m9c5acr.azurecr.io/devopsoh/api-userprofile
-          tags: latest
       run: |
-          docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/sampleapp:${{ github.sha }}
-	  docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/sampleapp:${{ github.sha }}
-
+        docker build . -t devopsoh/api-userprofile:latest
+        docker tag devopsoh/api-userprofile ${{ secrets.REGISTRY_LOGIN_SERVER }}/devopsoh/api-userprofile:latest
+        docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/devopsoh/api-userprofile:latest
