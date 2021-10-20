@@ -18,7 +18,7 @@
 name: ci
 on:
   pull_request:
-    branches: [ main ]      
+    branches: [ main ]
 
 env:
   AZURE_WEBAPP_NAME: openhackheh1m9c5userprofile    # set this to your application's name
@@ -44,15 +44,12 @@ jobs:
         npm install
         npm run build --if-present
         npm run test --if-present
-	
-        
     - name: Docker login
       uses: azure/docker-login@v1
       with:
           login-server: yourACRname.azurecr.io
           username: ${{ secrets.ACR_USERNAME }}
           password: ${{ secrets.ACR_PASSWORD }}
-	  
     - name: Build and push
       uses: docker/build-push-action@v2
       with:
@@ -60,7 +57,7 @@ jobs:
           push: true
           image: openhackheh1m9c5acr.azurecr.io/devopsoh/api-userprofile
           tags: latest
-          login-server: openhackheh1m9c5acr.azurecr.io
-          username: ${{ secrets.ACR_USERNAME }}
-          password: ${{ secrets.ACR_PASSWORD }}
-	
+      run: |
+          docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/sampleapp:${{ github.sha }}
+	  docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/sampleapp:${{ github.sha }}
+
