@@ -52,6 +52,7 @@ jobs:
           password: ${{ secrets.ACR_PASSWORD }}
     - name: Build and push
       run: |
+        cd ./apis/userprofile
         docker build . -t devopsoh/api-userprofile:latest
         docker tag devopsoh/api-userprofile ${{ secrets.REGISTRY_LOGIN_SERVER }}/devopsoh/api-userprofile:latest
         docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/devopsoh/api-userprofile:latest
