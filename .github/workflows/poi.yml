@@ -48,11 +48,11 @@ jobs:
         # deploy to Azure Web App.
         dotnet build .
         dotnet test .
-      if: ${{ failure() }}
     - name: Create an issue for POI
       uses: JasonEtco/create-an-issue@v2.6.0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}       # The GitHub token (if not provided the environment variable GITHUB_TOKEN will be used instead)
+      if: ${{ failure() }}
     - name: Docker login
       uses: azure/docker-login@v1
       with:
