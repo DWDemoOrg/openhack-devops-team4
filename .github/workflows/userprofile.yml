@@ -19,6 +19,8 @@ name: ci
 on:
   pull_request:
     branches: [ main ]
+    paths:
+      - '/apis/userprofile/'
 
 env:
   AZURE_WEBAPP_NAME: openhackheh1m9c5userprofile    # set this to your application's name
