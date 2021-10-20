@@ -18,14 +18,14 @@
 name: ci-poi
 on:
   push:
-    branches: [ main ]
+    branches: [ main, poi-build-fix ]
     paths:
       - 'apis/poi/**'
   workflow_dispatch:
 env:
   AZURE_WEBAPP_NAME: openhackheh1m9c5poi    # set this to your application's name
   AZURE_WEBAPP_PACKAGE_PATH: '/apis/poi'      # set this to the path to your web app project, defaults to the repository root
-  DOTNET_VERSION: '3.1'                # set this to the node version to use
+  DOTNET_VERSION: 3.1                # set this to the node version to use
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}       # The GitHub token (if not provided the environment variable GITHUB_TOKEN will be used instead)
   APP_NAME: api-poi
   
@@ -47,11 +47,11 @@ jobs:
         # deploy to Azure Web App.
         dotnet build .
         dotnet test .
+      if: ${{ failure() }}
     - name: Create an issue for POI
       uses: JasonEtco/create-an-issue@v2.6.0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}       # The GitHub token (if not provided the environment variable GITHUB_TOKEN will be used instead)
-      if: ${{ failure() }}
     - name: Docker login
       uses: azure/docker-login@v1
       with:
@@ -65,32 +65,32 @@ jobs:
         docker tag devopsoh/${{ env.APP_NAME }} ${{ secrets.REGISTRY_LOGIN_SERVER }}/devopsoh/${{ env.APP_NAME }}:${{ github.run_number }}
         docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/devopsoh/${{ env.APP_NAME }}:${{ github.run_number }}
 
-  release-staging:
-    name: Release Staging
-    needs: build-and-deploy
-    runs-on: ubuntu-latest
-    environment: staging
-    steps:
-    - name: Relese Staging
-      run: |
-        echo Release to Staging, run number: ${{ github.run_number }};
-    - name: Azure WebApp
-      uses: Azure/webapps-deploy@v2
-      with:
-        # Name of the Azure Web App
-        app-name: ${{ env.AZURE_WEBAPP_NAME }}
-        # Applies to Web Apps(Windows and Linux) and Web App Containers(linux). Multi container scenario not supported. Publish profile (*.publishsettings) file contents with Web Deploy secrets
-        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_STAGING_POI }}
-        # Enter an existing Slot other than the Production slot
-        slot-name: staging # optional, default is production
-        # Applies to Web App only: Path to package or folder. *.zip, *.war, *.jar or a folder to deploy
-        #package: # optional, default is .
-        # Applies to Web App Containers only: Specify the fully qualified container image(s) name. For example, 'myregistry.azurecr.io/nginx:latest' or 'python:3.7.2-alpine/'. For multi-container scenario multiple container image names can be provided (multi-line separated)
-        images: ${{ secrets.REGISTRY_LOGIN_SERVER }}/devopsoh/${{ env.APP_NAME }}:${{ github.run_number }}
-        # Applies to Web App Containers only: Path of the Docker-Compose file. Should be a fully qualified path or relative to the default working directory. Required for multi-container scenario
-        #configuration-file: # optional
-        # Enter the start up command. For ex. dotnet run or dotnet run
-        #startup-command: # optional
+  # release-staging:
+  #   name: Release Staging
+  #   needs: build-and-deploy
+  #   runs-on: ubuntu-latest
+  #   environment: staging
+  #   steps:
+  #   - name: Relese Staging
+  #     run: |
+  #       echo Release to Staging, run number: ${{ github.run_number }};
+  #   - name: Azure WebApp
+  #     uses: Azure/webapps-deploy@v2
+  #     with:
+  #       # Name of the Azure Web App
+  #       app-name: ${{ env.AZURE_WEBAPP_NAME }}
+  #       # Applies to Web Apps(Windows and Linux) and Web App Containers(linux). Multi container scenario not supported. Publish profile (*.publishsettings) file contents with Web Deploy secrets
+  #       publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_STAGING_POI }}
+  #       # Enter an existing Slot other than the Production slot
+  #       slot-name: staging # optional, default is production
+  #       # Applies to Web App only: Path to package or folder. *.zip, *.war, *.jar or a folder to deploy
+  #       #package: # optional, default is .
+  #       # Applies to Web App Containers only: Specify the fully qualified container image(s) name. For example, 'myregistry.azurecr.io/nginx:latest' or 'python:3.7.2-alpine/'. For multi-container scenario multiple container image names can be provided (multi-line separated)
+  #       images: ${{ secrets.REGISTRY_LOGIN_SERVER }}/devopsoh/${{ env.APP_NAME }}:${{ github.run_number }}
+  #       # Applies to Web App Containers only: Path of the Docker-Compose file. Should be a fully qualified path or relative to the default working directory. Required for multi-container scenario
+  #       #configuration-file: # optional
+  #       # Enter the start up command. For ex. dotnet run or dotnet run
+  #       #startup-command: # optional
         
   # release-production:
   #   name: Release Production
