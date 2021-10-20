@@ -33,7 +33,7 @@ jobs:
   build-and-deploy:
     name: Build and Deploy
     runs-on: ubuntu-latest
-    environment: staging
+    environment: development
     steps:
     - uses: actions/checkout@v2
     - name: Installing Go
@@ -63,7 +63,7 @@ jobs:
     - name: Build and push
       run: |
         cd ./apis/trips
-        docker build . -t devopsoh/${{ env.APP_NAME }}:latest
+        docker build . -t devopsoh/${{ env.APP_NAME }}:${{ github.run_number }}
         docker tag devopsoh/${{ env.APP_NAME }} ${{ secrets.REGISTRY_LOGIN_SERVER }}/devopsoh/${{ env.APP_NAME }}:${{ github.run_number }}
         docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/devopsoh/${{ env.APP_NAME }}:${{ github.run_number }}
 

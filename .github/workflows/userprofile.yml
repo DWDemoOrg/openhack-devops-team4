@@ -62,7 +62,7 @@ jobs:
     - name: Build and push
       run: |
         cd ./apis/userprofile
-        docker build . -t devopsoh/${{ env.APP_NAME }}:latest
+        docker build . -t devopsoh/${{ env.APP_NAME }}:${{ github.run_number }}
         docker tag devopsoh/${{ env.APP_NAME }} ${{ secrets.REGISTRY_LOGIN_SERVER }}/devopsoh/${{ env.APP_NAME }}:${{ github.run_number }}
         docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/devopsoh/${{ env.APP_NAME }}:${{ github.run_number }}
 
