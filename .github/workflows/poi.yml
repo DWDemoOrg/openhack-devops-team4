@@ -20,7 +20,7 @@ on:
   push:
     branches: [ main, poi-build-fix ]
     paths:
-     - 'apis/poi/**'
+      - 'apis/poi/**'
   workflow_dispatch:
 env:
   AZURE_WEBAPP_NAME: openhackheh1m9c5poi    # set this to your application's name
@@ -33,7 +33,7 @@ jobs:
   build-and-deploy:
     name: Build and Deploy
     runs-on: ubuntu-latest
-    environment: staging
+    environment: development
     steps:
     - uses: actions/checkout@v2
     - name: Setup .Net
