@@ -46,7 +46,7 @@ jobs:
         # Build and test the project, then
         # deploy to Azure Web App.
         dotnet build .
-        dotnet test /apis/poi/test/UnitTests
+        dotnet test /apis/poi/tests/UnitTests/
     - name: Create an issue for POI
       uses: JasonEtco/create-an-issue@v2.6.0
       env:
