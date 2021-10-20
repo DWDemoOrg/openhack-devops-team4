@@ -3,7 +3,7 @@
 # This workflow assumes you have already created the target Azure App Service web app.
 # For instructions see https://docs.microsoft.com/azure/app-service/app-service-plan-manage#create-an-app-service-plan
 #
-# To configure this workflow:
+# To configure this workflow: 
 #
 # 1. For Linux apps, add an app setting called WEBSITE_WEBDEPLOY_USE_SCM and set it to true in your app **before downloading the file**.
 #      For more instructions see: https://docs.microsoft.com/azure/app-service/configure-common#configure-app-settings
@@ -18,7 +18,7 @@
 name: ci
 on:
   pull_request:
-    branches: [ main ]      
+    branches: [ main ]
 
 env:
   AZURE_WEBAPP_NAME: openhackheh1m9c5userprofile    # set this to your application's name
@@ -44,15 +44,15 @@ jobs:
         npm install
         npm run build --if-present
         npm run test --if-present
-        
-    - name: Build and push
-      uses: docker/build-push-action@v2
+    - name: Docker login
+      uses: azure/docker-login@v1
       with:
-          context: ./apis/userprofile
-          push: true
-          image: devopsoh/api-userprofile
-          tags: latest
-          login-server: openhackheh1m9c5acr.azurecr.io
+          login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
           username: ${{ secrets.ACR_USERNAME }}
           password: ${{ secrets.ACR_PASSWORD }}
-	
+    - name: Build and push
+      run: |
+        cd ./apis/userprofile
+        docker build . -t devopsoh/api-userprofile:latest
+        docker tag devopsoh/api-userprofile ${{ secrets.REGISTRY_LOGIN_SERVER }}/devopsoh/api-userprofile:latest
+        docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/devopsoh/api-userprofile:latest
