@@ -15,7 +15,7 @@
 #
 # For more information on GitHub Actions for Azure, refer to https://github.com/Azure/Actions
 # For more samples to get started with GitHub Action workflows to deploy to Azure, refer to https://github.com/Azure/actions-workflow-samples
-name: ci
+name: ci-user-java
 on:
   push:
     branches: [ main ]
@@ -25,7 +25,7 @@ on:
 env:
   AZURE_WEBAPP_NAME: openhackheh1m9c5userjava    # set this to your application's name
   AZURE_WEBAPP_PACKAGE_PATH: '/apis/user-java'      # set this to the path to your web app project, defaults to the repository root
-  NODE_VERSION: '12.x'                # set this to the node version to use
+  JAVA_VERSION: '12.x'                # set this to the node version to use
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}       # The GitHub token (if not provided the environment variable GITHUB_TOKEN will be used instead)
 
 jobs:
@@ -35,22 +35,22 @@ jobs:
     environment: staging
     steps:
     - uses: actions/checkout@v2
-    - name: Use Node.js ${{ env.NODE_VERSION }}
-      uses: actions/setup-node@v2
-      with:
-        node-version: ${{ env.NODE_VERSION }}
-    - name: npm install, build, and test
+    - name: Install Java
+      uses: actions/setup-java@v2
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: 'adopt'
+    - name: install, build, and test
       run: |
         cd ./apis/user-java
         # Build and test the project, then
         # deploy to Azure Web App.
-        npm install
-        npm run build
-        npm run test --if-present
+        mvn clean install
+        mvn test
     - name: Create an issue
       uses: JasonEtco/create-an-issue@v2.6.0
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}       # The GitHub token (if not provided the environment variable GITHUB_TOKEN will be used instead)
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}       # The GitHub token (if not provided the environment variable GITHUB_TOKEN will be used instead) 
       if: ${{ failure() }}
     - name: Docker login
       uses: azure/docker-login@v1

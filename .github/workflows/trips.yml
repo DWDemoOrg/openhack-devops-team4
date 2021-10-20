@@ -15,7 +15,7 @@
 #
 # For more information on GitHub Actions for Azure, refer to https://github.com/Azure/Actions
 # For more samples to get started with GitHub Action workflows to deploy to Azure, refer to https://github.com/Azure/actions-workflow-samples
-name: ci
+name: ci-trips
 on:
   push:
     branches: [ main ]
@@ -25,7 +25,7 @@ on:
 env:
   AZURE_WEBAPP_NAME: openhackheh1m9c5trips    # set this to your application's name
   AZURE_WEBAPP_PACKAGE_PATH: '/apis/trips'      # set this to the path to your web app project, defaults to the repository root
-  NODE_VERSION: '12.x'                # set this to the node version to use
+  GO_VERSION: '12.x'                # set this to the node version to use
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}       # The GitHub token (if not provided the environment variable GITHUB_TOKEN will be used instead)
 
 jobs:
@@ -35,18 +35,18 @@ jobs:
     environment: staging
     steps:
     - uses: actions/checkout@v2
-    - name: Use Node.js ${{ env.NODE_VERSION }}
-      uses: actions/setup-node@v2
+    - name: Installing Go
+      uses: actions/setup-go@v2
       with:
-        node-version: ${{ env.NODE_VERSION }}
-    - name: npm install, build, and test
+        go-version: 1.17
+    - name: install, build, and test
       run: |
         cd ./apis/trips
         # Build and test the project, then
         # deploy to Azure Web App.
-        npm install
-        npm run build
-        npm run test --if-present
+        go build -v ./...
+        # go run main.go
+        go test ./tripgo -run Unit
     - name: Create an issue
       uses: JasonEtco/create-an-issue@v2.6.0
       env:
