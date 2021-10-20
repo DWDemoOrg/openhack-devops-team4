@@ -41,3 +41,5 @@ There will be a junit formatted report file called userprofile-report.xml under 
 *Hello World! Kick off action!! #4*
 *Hello World! Kick off action!! #5*
 *Hello World! Kick off action!! #6*
+
+*Let's see an automated build!*
