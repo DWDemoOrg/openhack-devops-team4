@@ -47,17 +47,11 @@ jobs:
         npm install
         npm run build
         npm run test --if-present
-    - name: Create an Issue Comment
-# You may pin to the exact commit or the version.
-# uses: simpleactions/create-issue-comment@c0b2f6a61fca5817707f129fc58bce01faa21277
-      uses: simpleactions/create-issue-comment@v1.0.0
+    - name: Create an issue
+      uses: JasonEtco/create-an-issue@v2.6.0
       if: ${{ failure() }}
-      with:    
-# The message body
-          body: "This is only a test"
-# The issue number
-          issue_number: 1234
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+      with:
+          assignees: dwillis50
     - name: Docker login
       uses: azure/docker-login@v1
       with:
