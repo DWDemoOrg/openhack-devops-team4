@@ -18,8 +18,7 @@
 name: ci-poi
 on:
   push:
-    #branches: [ main, poi-build-fix ]
-    branches: [ poi-build-fix ]
+    branches: [ main, poi-build-fix ]
     # paths:
     #   - 'apis/poi/**'
   workflow_dispatch:
