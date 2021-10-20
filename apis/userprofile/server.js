@@ -38,7 +38,7 @@ App.use(Swaggerize({
 
 App.use('/api/docs/user', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-//Server.listen(8080, function () {
+Server.listen(8080, function () {
     App.swagger.api.host = this.address().address + ':' + this.address().port;
     /* eslint-disable no-console */
     console.log('App running on %s:%d', this.address().address, this.address().port);
