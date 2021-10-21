@@ -142,13 +142,15 @@ jobs:
         cd .healthcheck
         chmod +x polling.sh
         ./polling.sh -i https://${{ env.AZURE_WEBAPP_NAME }}.azurewebsites.blah/api/healthcheck/${{ env.HEALTH_CHECK_POSTFIX }}
+    - name: Rollback to staging
+      if: ${{ failure() }}
+      run: |
+        echo Rollback to Staging due to error 
+        az webapp deployment slot swap --name openhackheh1m9c5poi --resource-group openhackheh1m9c5rg --slot staging --target-slot production
     - name: Create an issue for POI
       if: ${{ failure() }}
       uses: JasonEtco/create-an-issue@v2.6.0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}       # The GitHub token (if not provided the environment variable GITHUB_TOKEN will be used instead)
-    - name: Rollback to staging
-      run: |
-        echo Rollback to Staging due to error 
-        az webapp deployment slot swap --name openhackheh1m9c5poi --resource-group openhackheh1m9c5rg --slot staging --target-slot production
+      
       
