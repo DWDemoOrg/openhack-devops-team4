@@ -34,3 +34,6 @@ This will run both the Unit Tests and the Integration Tests
 * [Logging in ASP.NET Core](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/logging)
 
 *updating readme to test GH Action*
+*another change, this time in branch dave-ghaction-test*
+
+*yet another change, this time after adding "if" statement to build and deploy for dave branch*
