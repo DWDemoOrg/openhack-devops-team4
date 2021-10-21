@@ -34,7 +34,7 @@ jobs:
         # Build and test the project, then
         # deploy to Azure Web App.
         dotnet build .
-        dotnet test tests/UnitTests2/
+        dotnet test tests/UnitTests/
     - name: Create an issue for POI
       if: ${{ failure() }}
       uses: JasonEtco/create-an-issue@v2.6.0
@@ -59,9 +59,9 @@ jobs:
           cd ./apis/poi/web
           docker build . -t devopsoh/${{ env.APP_NAME }}:${{ github.run_number }}
           docker tag devopsoh/${{ env.APP_NAME }}:${{ github.run_number }} ${{ secrets.REGISTRY_LOGIN_SERVER }}/devopsoh/${{ env.APP_NAME }}:${{ github.run_number }}
-          docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/devopsoh/${{ env.APP_NAME }}:${{ github.run_number }}
-        if: ${{ failure() }}
+          docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/devopsoh/${{ env.APP_NAME }}:${{ github.run_number }}        
       - name: Create an issue for POI
+        if: ${{ failure() }}      
         uses: JasonEtco/create-an-issue@v2.6.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}       # The GitHub token (if not provided the environment variable GITHUB_TOKEN will be used instead)
@@ -88,10 +88,10 @@ jobs:
 
         images: ${{ secrets.REGISTRY_LOGIN_SERVER }}/devopsoh/${{ env.APP_NAME }}:${{ github.run_number }}
     - name: Create an issue for POI
+      if: ${{ failure() }}      
       uses: JasonEtco/create-an-issue@v2.6.0
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}       # The GitHub token (if not provided the environment variable GITHUB_TOKEN will be used instead)
-      if: ${{ failure() }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}       # The GitHub token (if not provided the environment variable GITHUB_TOKEN will be used instead)      
   
   
   HealthCheck-Staging:
@@ -105,8 +105,8 @@ jobs:
         cd .healthcheck
         chmod +x polling.sh
         ./polling.sh -i https://${{ env.AZURE_WEBAPP_NAME }}.azurewebsites.net/api/healthcheck/${{ env.HEALTH_CHECK_POSTFIX }}
-      if: ${{ failure() }}
     - name: Create an issue for POI
+      if: ${{ failure() }}
       uses: JasonEtco/create-an-issue@v2.6.0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}       # The GitHub token (if not provided the environment variable GITHUB_TOKEN will be used instead)
@@ -125,8 +125,8 @@ jobs:
       run: |
         echo Release to Prod   
         az webapp deployment slot swap --name openhackheh1m9c5poi --resource-group openhackheh1m9c5rg --slot staging --target-slot production      
-      if: ${{ failure() }}
     - name: Create an issue for POI on prod swap
+      if: ${{ failure() }}
       uses: JasonEtco/create-an-issue@v2.6.0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}       # The GitHub token (if not provided the environment variable GITHUB_TOKEN will be used instead)
@@ -142,8 +142,8 @@ jobs:
         cd .healthcheck
         chmod +x polling.sh
         ./polling.sh -i https://${{ env.AZURE_WEBAPP_NAME }}.azurewebsites.blah/api/healthcheck/${{ env.HEALTH_CHECK_POSTFIX }}
-      if: ${{ failure() }}
     - name: Create an issue for POI
+      if: ${{ failure() }}
       uses: JasonEtco/create-an-issue@v2.6.0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}       # The GitHub token (if not provided the environment variable GITHUB_TOKEN will be used instead)
