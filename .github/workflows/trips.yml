@@ -65,7 +65,7 @@ jobs:
       run: |
         cd ./apis/trips
         docker build . -t devopsoh/${{ env.APP_NAME }}:${{ github.run_number }}
-        docker tag devopsoh/${{ env.APP_NAME }} ${{ secrets.REGISTRY_LOGIN_SERVER }}/devopsoh/${{ env.APP_NAME }}:${{ github.run_number }}
+        docker tag devopsoh/${{ env.APP_NAME }}:${{ github.run_number }} ${{ secrets.REGISTRY_LOGIN_SERVER }}/devopsoh/${{ env.APP_NAME }}:${{ github.run_number }}
         docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/devopsoh/${{ env.APP_NAME }}:${{ github.run_number }}
 
   release-staging:
