@@ -142,6 +142,10 @@ jobs:
         cd .healthcheck
         chmod +x polling.sh
         ./polling.sh -i https://${{ env.AZURE_WEBAPP_NAME }}.azurewebsites.blah/api/healthcheck/${{ env.HEALTH_CHECK_POSTFIX }}
+    - name: Azure Login
+      uses: Azure/login@v1.1
+      with:
+       creds: ${{ secrets.AZURE_CREDENTIALS }}
     - name: Rollback to staging
       if: ${{ failure() }}
       run: |
