@@ -145,7 +145,7 @@ jobs:
       run: |
         cd .healthcheck
         chmod +x polling.sh
-        ./polling.sh -i https://${{ env.AZURE_WEBAPP_NAME }}.azurewebsites.blah/api/healthcheck/${{ env.HEALTH_CHECK_POSTFIX }}
+        ./polling.sh -i https://${{ env.AZURE_WEBAPP_NAME }}.azurewebsites.net/api/healthcheck/${{ env.HEALTH_CHECK_POSTFIX }}
     - name: Rollback to staging
       if: ${{ failure() }}
       run: |
