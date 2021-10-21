@@ -141,7 +141,7 @@ jobs:
         cd .healthcheck
         chmod +x polling.sh
         ./polling.sh -i https://${{ env.AZURE_WEBAPP_NAME }}.azurewebsites.net/api/healthcheck/${{ env.HEALTH_CHECK_POSTFIX }}
-        if: ${{ failure() }}
+      if: ${{ failure() }}
     - name: Create an issue for POI
       uses: JasonEtco/create-an-issue@v2.6.0
       env:
