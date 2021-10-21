@@ -118,10 +118,10 @@ jobs:
     environment: production
     steps:
     - name: Azure Login
-      uses: Azure/login@v1
+      uses: Azure/login@v1.1
       with:
     # Paste output of `az ad sp create-for-rbac` as value of secret variable: AZURE_CREDENTIALS
-       credentials: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_POI }}
+       creds: ${{ secrets.AZURE_CREDENTIALS }}
     - name: Relese Prod
       run: |
         echo Release to Prod   
