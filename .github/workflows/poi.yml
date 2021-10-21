@@ -93,15 +93,27 @@ jobs:
         # Enter the start up command. For ex. dotnet run or dotnet run
         #startup-command: # optional
         
-  # release-production:
-  #   name: Release Production
-  #   needs: release-staging
-  #   runs-on: ubuntu-latest
-  #   environment: production
-  #   steps:
-  #   - name: Relese Prod
-  #     run: |
-  #       echo Release to Prod   
+  release-production:
+    name: Release Production
+    needs: release-staging
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+    - name: Azure Login
+      uses: Azure/login@v1
+      with:
+    # Paste output of `az ad sp create-for-rbac` as value of secret variable: AZURE_CREDENTIALS
+       creds: ${{ secrets.AZURE_CREDENTIALS }}
+    - name: Relese Prod
+      run: |
+        echo Release to Prod   
+        az webapp deployment slot swap --name openhackheh1m9c5poi --resource-group openhackheh1m9c5rg --slot staging --target-slot production
+      if: ${{ failure() }}
+    - name: Create an issue for POI
+      uses: JasonEtco/create-an-issue@v2.6.0
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}       # The GitHub token (if not provided the environment variable GITHUB_TOKEN will be used instead)
+      
 
 #  ${{ github.run_id }}
 #  ${{ github.run_number }}
