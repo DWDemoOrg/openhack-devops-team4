@@ -93,8 +93,9 @@ jobs:
         #configuration-file: # optional
         # Enter the start up command. For ex. dotnet run or dotnet run
         #startup-command: # optional
-    - name: Health Test
+    - name: Checkout the repo
       uses: actions/checkout@v2
+    - name: API Health Check
       run: |
         echo $(ls)
         echo $(pwd)
