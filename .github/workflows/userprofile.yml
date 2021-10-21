@@ -106,7 +106,7 @@ jobs:
         echo 'start chmod +x polling.sh'
         chmod +x polling.sh
         echo 'start calling polling'
-        ./polling -i https://${{ env.AZURE_WEBAPP_NAME }}.azurewebsites.net/api/healthcheck/${{ env.HEALTH_CHECK_POSTFIX }}
+        ./polling.sh -i https://${{ env.AZURE_WEBAPP_NAME }}.azurewebsites.net/api/healthcheck/${{ env.HEALTH_CHECK_POSTFIX }}
         
   # release-production:
   #   name: Release Production
