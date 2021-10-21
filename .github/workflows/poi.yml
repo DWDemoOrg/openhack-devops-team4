@@ -90,7 +90,7 @@ jobs:
       if: ${{ failure() }}
   
   
-  HealthCheck:
+  HealthCheck-Staging:
     runs-on: ubuntu-latest
     needs: release-staging
     steps: 
@@ -111,7 +111,7 @@ jobs:
   # release-production:
   release-production:
     name: Release Production
-    needs: release-staging
+    needs: HealthCheck-Staging
     runs-on: ubuntu-latest
     environment: production
     steps:
