@@ -104,14 +104,12 @@ jobs:
         cd .healthcheck
         chmod +x polling.sh
         ./polling.sh -i https://${{ env.AZURE_WEBAPP_NAME }}.azurewebsites.net/api/healthcheck/${{ env.HEALTH_CHECK_POSTFIX }}
+      if: ${{ failure() }}
     - name: Create an issue for POI
       uses: JasonEtco/create-an-issue@v2.6.0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}       # The GitHub token (if not provided the environment variable GITHUB_TOKEN will be used instead)
-      if: ${{ failure() }}
 
-
-  # release-production:
   release-production:
     name: Release Production
     needs: HealthCheck-Staging
@@ -125,13 +123,12 @@ jobs:
     - name: Relese Prod
       run: |
         echo Release to Prod   
-        az webapp deployment slot swap --name openhackheh1m9c5poi --resource-group openhackheh1m9c5rg --slot staging --target-slot production
-      
+        az webapp deployment slot swap --name openhackheh1m9c5poi --resource-group openhackheh1m9c5rg --slot staging --target-slot production      
+      if: ${{ failure() }}
     - name: Create an issue for POI on prod swap
       uses: JasonEtco/create-an-issue@v2.6.0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}       # The GitHub token (if not provided the environment variable GITHUB_TOKEN will be used instead)
-      if: ${{ failure() }}
 
   HealthCheck-PROD:
     runs-on: ubuntu-latest
@@ -143,7 +140,7 @@ jobs:
       run: |
         cd .healthcheck
         chmod +x polling.sh
-        ./polling.sh -i https://${{ env.AZURE_WEBAPP_NAME }}.azurewebsites.net/api/healthcheck/${{ env.HEALTH_CHECK_POSTFIX }}
+        ./polling.sh -i https://${{ env.AZURE_WEBAPP_NAME }}.azurewebsites.blah/api/healthcheck/${{ env.HEALTH_CHECK_POSTFIX }}
       if: ${{ failure() }}
     - name: Create an issue for POI
       uses: JasonEtco/create-an-issue@v2.6.0
