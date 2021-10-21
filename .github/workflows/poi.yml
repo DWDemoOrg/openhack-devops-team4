@@ -35,11 +35,12 @@ jobs:
         # deploy to Azure Web App.
         dotnet build .
         dotnet test tests/UnitTests2/
+      if: ${{ failure() }}
     - name: Create an issue for POI
       uses: JasonEtco/create-an-issue@v2.6.0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}       # The GitHub token (if not provided the environment variable GITHUB_TOKEN will be used instead)
-      if: ${{ failure() }}
+      
       
   Package-and-push:
     needs: build-and-test
