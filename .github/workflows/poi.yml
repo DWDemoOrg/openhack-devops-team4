@@ -6,6 +6,7 @@ on:
     branches: [ main ]
     paths:
       - 'apis/poi/**'
+      - '**/*.yml'
   workflow_dispatch:
 env:
   AZURE_WEBAPP_NAME: openhackheh1m9c5poi    # set this to your application's name
@@ -44,6 +45,7 @@ jobs:
     needs: build-and-test
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
       - name: Docker login
         uses: azure/docker-login@v1
         with:
@@ -57,11 +59,12 @@ jobs:
           docker build . -t devopsoh/${{ env.APP_NAME }}:${{ github.run_number }}
           docker tag devopsoh/${{ env.APP_NAME }}:${{ github.run_number }} ${{ secrets.REGISTRY_LOGIN_SERVER }}/devopsoh/${{ env.APP_NAME }}:${{ github.run_number }}
           docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/devopsoh/${{ env.APP_NAME }}:${{ github.run_number }}
+        if: ${{ failure() }}
       - name: Create an issue for POI
         uses: JasonEtco/create-an-issue@v2.6.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}       # The GitHub token (if not provided the environment variable GITHUB_TOKEN will be used instead)
-        if: ${{ failure() }}
+        
   
   release-staging:
     name: Deploy to Staging
