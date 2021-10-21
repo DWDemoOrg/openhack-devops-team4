@@ -95,7 +95,9 @@ jobs:
         #startup-command: # optional
     - name: Health Test
       run: |
-        cd ./.healthcheck
+        echo $(ls)
+        echo $(pwd)
+        cd .healthcheck
         chmod +x polling
         ./polling -i https://${{ env.AZURE_WEBAPP_NAME }}.azurewebsites.net/api/healthcheck/${{ env.HEALTH_CHECK_POSTFIX }}
         
