@@ -97,15 +97,8 @@ jobs:
       uses: actions/checkout@v2
     - name: API Health Check
       run: |
-        echo $(ls)
-        echo $(pwd)
         cd .healthcheck
-        echo 'start echo ls'
-        echo $(ls)
-        echo 'end echo ls'
-        echo 'start chmod +x polling.sh'
         chmod +x polling.sh
-        echo 'start calling polling'
         ./polling.sh -i https://${{ env.AZURE_WEBAPP_NAME }}.azurewebsites.net/api/healthcheck/${{ env.HEALTH_CHECK_POSTFIX }}
         
   # release-production:
