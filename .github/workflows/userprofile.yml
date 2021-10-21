@@ -28,6 +28,7 @@ env:
   NODE_VERSION: '12.x'                # set this to the node version to use
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}       # The GitHub token (if not provided the environment variable GITHUB_TOKEN will be used instead)
   APP_NAME: 'api-userprofile'
+  HEALTH_CHECK_POSTFIX: 'user'
 
 jobs:
   build-and-deploy:
@@ -92,6 +93,11 @@ jobs:
         #configuration-file: # optional
         # Enter the start up command. For ex. dotnet run or dotnet run
         #startup-command: # optional
+    - name: Health Test
+      run: |
+        cd ./.healthcheck
+        chmod +x polling
+        ./polling -i https://${{ env.AZURE_WEBAPP_NAME }}.azurewebsites.net/api/healthcheck/${{ env.HEALTH_CHECK_POSTFIX }}
         
   # release-production:
   #   name: Release Production
